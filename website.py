@@ -29,7 +29,12 @@ with s1:
     yr=st.selectbox("select Year",list(range(2006,2026)))
     year_data = df[df['Alarm Date'].dt.year == yr]
     year_data["Month"]=year_data["Alarm Date"].dt.month_name()
-    monthly = year_data.groupby("Month")["GIS Calculated Acres"].sum()
+    monthly = year_data.groupby("Month")["GIS Calculated Acres"].mean()
+    monthly = monthly.reindex([
+    "January", "February", "March", "April",
+    "May", "June", "July", "August",
+    "September", "October", "November", "December"
+    ])
     fig1=px.histogram(
         
         x=monthly.index,
@@ -38,6 +43,9 @@ with s1:
             "x":f"Month  {yr}",
             "y":"Acers Burned"
         }
+    )
+    fig1.update_layout(
+        yaxis_title="Avg of Acers Burned "
     )
     #fig1.update_xaxes(dtick=5)
     st.plotly_chart(fig1)
